@@ -29,7 +29,8 @@ describe('Options parsing', function() {
     gulpGjslint = new GulpGjslint();
 
     gulpGjslint.options.should.deep.equal(GulpGjslint.DEFAULT_OPTIONS);
-    gulpGjslint.options.should.have.property('reporter', null);
+    gulpGjslint.options.should.have.property('lintOptions');
+    gulpGjslint.options.lintOptions.should.have.property('reporter', null);
   });
 
   it('should merge any passed config with the defaults', function() {
@@ -38,15 +39,18 @@ describe('Options parsing', function() {
     });
 
     gulpGjslint.options.should.have.property('foo', 'bar');
-    gulpGjslint.options.should.have.property('reporter', null);
+    gulpGjslint.options.should.have.property('lintOptions');
+    gulpGjslint.options.lintOptions.should.have.property('reporter', null);
   });
 
   it('should force the reporter to be null', function() {
     gulpGjslint = new GulpGjslint({
-      reporter: 'foo'
+      lintOptions: {
+        reporter: 'foo'
+      }
     });
 
-    gulpGjslint.options.should.have.property('reporter', null);
+    gulpGjslint.options.lintOptions.should.have.property('reporter', null);
   });
 
   it('should pass the specified options to gjslint', function() {
@@ -56,18 +60,20 @@ describe('Options parsing', function() {
 
     options = {
       foo: 'bar',
-      zip: 'zap'
+      passOnlyError: false,
+      lintOptions: {
+        zip: 'zap'
+      }
     };
 
     expectedOptions = {
-      foo: 'bar',
       zip: 'zap',
       reporter: null,
       src: ['./fake.js']
     };
 
     gulpGjslint = new GulpGjslint(options);
-    gulpGjslint.processFile(mockFile);
+    gulpGjslint.loadSource('./fake.js');
 
     mockGjslint.should.have.been.calledWith(expectedOptions);
   });

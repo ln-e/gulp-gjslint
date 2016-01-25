@@ -22,20 +22,14 @@ describe('Parsing a linted file', function() {
     mockGjslint.callsArg(1);
 
     mockLintError = {
-      info: {
-        fails: [
+      errors:
+        [
           {
-            errors:
-              [
-                {
-                  line: 5,
-                  code: 2,
-                  description: 'foo'
-                }
-              ]
+            line: 5,
+            code: 2,
+            description: 'foo'
           }
         ]
-      }
     };
 
     GulpGjslint.__set__('gjslint', mockGjslint);
